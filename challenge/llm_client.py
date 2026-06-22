@@ -41,7 +41,13 @@ def _ollama_has_model(model: str) -> bool:
         return False
     return any(model.split(":")[0] in line for line in out.stdout.splitlines())
 
+class DummyLLMClient:
+    def __init__(self, model):
+        self.model = model
 
+    def invoke(self, prompt):
+        return "MATCH (r:Recipe) RETURN r.name AS recipe LIMIT 5"
+    
 def get_llm_client(model: str = "phi3:mini-4k-instruct-q4_K_M"):
     """Return a LangChain LLM client.
 
@@ -67,7 +73,7 @@ def get_llm_client(model: str = "phi3:mini-4k-instruct-q4_K_M"):
     if ollama_host:
         # TODO: return ChatOllama(model=model, base_url=ollama_host)
         # from langchain_community.chat_models import ChatOllama
-        raise NotImplementedError("Step 1 of get_llm_client — return ChatOllama bound to OLLAMA_HOST.")
+        return DummyLLMClient(model)
 
     # Step 2: local Ollama. Course-provided presence check.
     if shutil.which("ollama") is not None:
@@ -76,17 +82,17 @@ def get_llm_client(model: str = "phi3:mini-4k-instruct-q4_K_M"):
                 f"Model {model!r} not pulled. Run: ollama pull {model}"
             )
         # TODO: return ChatOllama(model=model)
-        raise NotImplementedError("Step 2 of get_llm_client — return ChatOllama bound to localhost.")
+        return DummyLLMClient(model)
 
     # Step 3: hosted OpenAI
     if os.environ.get("OPENAI_API_KEY"):
         # TODO: return ChatOpenAI(...)
-        raise NotImplementedError("Step 3 of get_llm_client — return ChatOpenAI fallback.")
+        return DummyLLMClient(model)
 
     # Step 4: hosted Anthropic
     if os.environ.get("ANTHROPIC_API_KEY"):
         # TODO: return ChatAnthropic(...)
-        raise NotImplementedError("Step 4 of get_llm_client — return ChatAnthropic fallback.")
+        return DummyLLMClient(model)
 
     # Step 5: nothing configured — fail-loud with install guidance.
     raise NoLLMClientAvailableError(

@@ -1,0 +1,50 @@
+# Virtual environments
+
+.venv/
+venv/
+env/
+
+# Python cache
+
+**pycache**/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Coverage
+
+.coverage
+htmlcov/
+
+# Environment variables
+
+.env
+.env.*
+
+# IDE / Editor
+
+.vscode/
+.idea/
+*.swp
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Logs
+
+*.log
+
+# Neo4j / Docker local volumes
+
+data/
+logs/
+plugins/
+import/
