@@ -48,7 +48,67 @@ def detect_shape(question: str) -> ShapeId | None:
     # 2. Apply rules in priority order — more-specific shapes (q14
     #    "but not", q8 "by ... that use") before less-specific (q1, q3).
     # 3. Return the matching ShapeId, or None if nothing matches.
-    raise NotImplementedError(
-        "detect_shape is not yet implemented — see the Integration Guide "
-        "Intent Classification section and the docstring above."
-    )
+    
+    q = question.lower()
+
+    # q14
+    if "but not" in q:
+        return ShapeId.Q14
+
+    # q15
+    if "optionally tagged" in q:
+        return ShapeId.Q15
+
+    # q13
+    if "or any subtype" in q or "or any kind" in q:
+        return ShapeId.Q13
+
+    # q10
+    if "under" in q and "minutes" in q:
+        return ShapeId.Q10
+
+    # q11
+    if "ingredients used in" in q:
+        return ShapeId.Q11
+
+    # q12
+    if "authors of" in q:
+        return ShapeId.Q12
+
+    # q8
+    if "by author" in q and "use" in q:
+        return ShapeId.Q8
+
+    # q2
+    if "by author" in q:
+        return ShapeId.Q2
+
+    # q7
+    if "require" in q and "technique" in q:
+        return ShapeId.Q7
+
+    # q9
+    if "ranked by popularity" in q or "most popular" in q:
+        return ShapeId.Q9
+
+    # q6
+    if "chinese" in q and "use" in q:
+        return ShapeId.Q6
+
+    # q5
+    if "sichuan" in q and "use" in q:
+        return ShapeId.Q5
+
+    # q4
+    if "asian" in q:
+        return ShapeId.Q4
+
+    # q3
+    if "italian" in q:
+        return ShapeId.Q3
+
+    # q1
+    if "use " in q or "with " in q:
+        return ShapeId.Q1
+
+    return None
